@@ -21,7 +21,7 @@ export interface ApiTicket {
   category: string;
   urgency: "Critical" | "High" | "Medium" | "Low";
   sentiment: "Angry" | "Frustrated" | "Neutral" | "Satisfied";
-  status: "Needs Review" | "Pending Action" | "Investigating" | "Resolved" | "Escalated";
+  status: "Needs Review" | "Pending Action" | "Investigating" | "Resolved" | "Escalated" | "REFUND_PROCESSED" | "CLAIM_REJECTED" | "IDENTITY_VERIFICATION_PENDING" | "P0_CRITICAL" | string;
   createdAt: string;
   slaDeadline: string;
   summary: string;
@@ -122,7 +122,15 @@ export async function executeManualAction(payload: {
   amount?: number;
   reason?: string;
   agent_notes?: string;
-}): Promise<{ success: boolean; message: string; ticket_status?: string; refund_reference?: string }> {
+  resolution_memo?: string;
+}): Promise<{
+  success: boolean;
+  message: string;
+  ticket_status?: string;
+  refund_reference?: string;
+  escalation_id?: string;
+  priority?: string;
+}> {
   try {
     const res = await fetch(`${API_BASE_URL}/api/actions/manual-action`, {
       method: "POST",
